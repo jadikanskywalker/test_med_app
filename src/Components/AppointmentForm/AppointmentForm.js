@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 const AppointmentForm = ({ doctorName, doctorSpeciality, onSubmit }) => {
     const [name, setName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [date, setDate] = useState();
+    const [date, setDate] = useState(null);
     const [selectedSlot, setSelectedSlot] = useState(null);
   
     const handleSlotSelection = (slot) => {
