@@ -11,34 +11,38 @@ function ReviewForm() {
   useEffect(() => {
     const storedUsername = sessionStorage.getItem('email');
     const storedDoctorData = JSON.parse(localStorage.getItem('doctorData'));
-    const storedReviewData = JSON.parse(localStorage.getItem("reviewData"));
+    let storedReviewData = JSON.parse(localStorage.getItem('reviewData'));
+
+    if (storedReviewData == null) {
+      storedReviewData = {};
+    }
 
     if (storedUsername) {
       setIsLoggedIn(true);
       setUsername(storedUsername);
     }
 
-    if (Object.isObject(storedReviewData)) {
-      if (Array.isArray(storedDoctorData)) {
-        for (const doctor of storedDoctorData) {
-          if (!(doctor.name in storedReviewData)) {
-            storedReviewData[doctor.name] = {
-              name: doctor.name,
-              speciality: doctor.speciality,
-              review: ""
-            };
-          }
+    if (Array.isArray(storedDoctorData)) {
+      for (const doctor of storedDoctorData) {
+        console.log(doctor);
+        if (!(doctor.name in storedReviewData)) {
+          storedReviewData[doctor.name] = {
+            speciality: doctor.speciality,
+            review: ""
+          };
         }
       }
+      console.log(storedReviewData);
       setReviewData(storedReviewData);
       localStorage.setItem("reviewData", JSON.stringify(storedReviewData));
     }
-  });
+  }, []);
 
   return (
-    <div className="reviews-container">
+    <div className="container reviews-container">
       <h1>Reviews</h1>
-      <table className="table">
+      {Object.keys(reviewData).length > 0 ? (
+      <table className="reviews-table">
         <thead>
           <tr>
             <th scope="col">Doctor</th>
@@ -48,16 +52,19 @@ function ReviewForm() {
           </tr>
         </thead>
         <tbody>
-          {storedReviewData.map((review) => {
+          {Object.entries(reviewData).map(([key, value]) => {
+            return (
             <tr>
-              <td>{review.name}</td>
-              <td>{review.speciality}</td>
-              <td><button>{review.review === "" ? "Give Review" : ""}</button></td>
-              <td>{review.review !== "" ? review.review : ""}</td>
+              <td>{key}</td>
+              <td>{value.speciality}</td>
+              <td><button>{value.review === "" ? "Give Review" : ""}</button></td>
+              <td>{value.review !== "" ? value.review : ""}</td>
             </tr>
+            );
           })}
         </tbody>
       </table>
+      ) : (<p>No doctors to review.</p>)}
     </div>
   );
 

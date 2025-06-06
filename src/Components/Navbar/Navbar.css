@@ -6,7 +6,7 @@
 /* Styling for the main navigation bar */
 nav {
     padding: 1.5rem;
-    position: fixed;
+    position: absolute;
     top: 0%;
     left: 50%;
     transform: translateX(-50%);

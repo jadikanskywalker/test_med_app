@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 
-
 const Navbar = () => {
     const [click, setClick] = useState(false);
 
@@ -68,10 +67,10 @@ const Navbar = () => {
         </li>
         {/* <li className="link">
           <Link to="/healthblog">Health Blog</Link>
-        </li>
+        </li> */}
         <li className="link">
          <Link to="/reviews">Reviews</Link>
-        </li> */}
+        </li>
         {isLoggedIn?(
           <>
             <li className="link">
