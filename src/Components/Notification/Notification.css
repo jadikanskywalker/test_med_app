@@ -1,12 +1,18 @@
-.appointment-card {
+.appointments-container {
     position: fixed;
-    bottom: 20px;
+    bottom: 15px;
     right: 10px;
     width: fit-content;
+}
+
+.appointment-card {
+    width: 240px;
     background:rgb(30, 141,249);
     color: white;
     border-radius: 15px;
     padding: 10px 15px;
+    margin-bottom: 15px;
+    margin-left: auto;
 }
 
 .appointment-card__title {

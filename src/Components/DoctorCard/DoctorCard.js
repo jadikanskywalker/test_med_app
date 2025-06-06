@@ -8,29 +8,34 @@ import { v4 as uuidv4 } from 'uuid';
 
 const DoctorCard = ({ name, speciality, experience, ratings, profilePic }) => {
   const [showModal, setShowModal] = useState(false);
-  const [doctorData, setDoctorData] = useState(null);
+  const [doctorData, setDoctorData] = useState([]);
   const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
-    // Retrieve stored username, doctor data, and appointment data from sessionStorage and localStorage
+    const storedDoctorData = JSON.parse(localStorage.getItem("doctorData"));
     const storedAppointmentData = JSON.parse(localStorage.getItem(name));
 
-    // Set appointmentData state if storedAppointmentData exists
+    if (storedDoctorData) {
+        setDoctorData(storedDoctorData);
+    }
+
     if (storedAppointmentData) {
         console.log(storedAppointmentData);
         setAppointments(storedAppointmentData);
     }
   }, []);
 
-  const handleBooking = () => {
-    setShowModal(true);
-  };
+//   const handleBooking = () => {
+//     setShowModal(true);
+//   };
 
   const handleCancel = (appointmentId) => {
     const updatedAppointments = appointments.filter((appointment) => appointment.id !== appointmentId);
     setAppointments(updatedAppointments);
     localStorage.setItem(name, JSON.stringify(updatedAppointments));
-    localStorage.setItem("doctorData", JSON.stringify(''));
+    const updatedDoctorData = doctorData.filter((doctor) => doctor.name !== name);
+    setDoctorData(updatedDoctorData);
+    localStorage.setItem("doctorData", JSON.stringify());
     window.location.reload();
   };
 
@@ -42,7 +47,9 @@ const DoctorCard = ({ name, speciality, experience, ratings, profilePic }) => {
     const updatedAppointments = [...appointments, newAppointment];
     setAppointments(updatedAppointments);
     localStorage.setItem(name, JSON.stringify(updatedAppointments));
-    localStorage.setItem("doctorData", JSON.stringify({name: name, speciality: speciality}));
+    const updatedDoctorData = [...doctorData, {name: name, speciality: speciality}]
+    setDoctorData(updatedDoctorData);
+    localStorage.setItem("doctorData", JSON.stringify(updatedDoctorData));
     setShowModal(false);
     window.location.reload();
   };

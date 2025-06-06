@@ -17,7 +17,18 @@ const Notification = ({ children }) => {
     // Retrieve stored username, doctor data, and appointment data from sessionStorage and localStorage
     const storedUsername = sessionStorage.getItem('email');
     const storedDoctorData = JSON.parse(localStorage.getItem('doctorData'));
-    const storedAppointmentData = JSON.parse(localStorage.getItem(storedDoctorData?.name));
+    const storedAppointmentData = [];
+
+    for (const doctor of storedDoctorData) {
+        const doctorAppointments = JSON.parse(localStorage.getItem(doctor.name));
+        if (doctorAppointments) {
+          storedAppointmentData.push({
+            name: doctor.name,
+            speciality: doctor.speciality,
+            appointments: doctorAppointments,
+          });
+        }
+      }
 
     // Set isLoggedIn state to true and update username if storedUsername exists
     if (storedUsername) {
@@ -31,9 +42,8 @@ const Notification = ({ children }) => {
     }
 
     // Set appointmentData state if storedAppointmentData exists
-    if (storedAppointmentData) {
       setAppointmentData(storedAppointmentData);
-    }
+    
   }, []); // Empty dependency array ensures useEffect runs only once after initial render
 
   // Return JSX elements to display Navbar, children components, and appointment details if user is logged in
@@ -45,31 +55,35 @@ const Notification = ({ children }) => {
       {children}
       {/* Display appointment details if user is logged in and appointmentData is available */}
       {isLoggedIn && appointmentData && (
-        <>
+        <div className="appointments-container">
+          {appointmentData.map((doctor) => {
+            return (
           <div className="appointment-card">
             <div className="appointment-card__content">
               {/* Display title for appointment details */}
               <h3 className="appointment-card__title">Appointment Details</h3>
               <p className="appointment-card__message">
                 {/* Display doctor's name from doctorData */}
-                <strong>Doctor:</strong> {doctorData?.name}
+                <strong>Doctor:</strong> {doctor?.name}
               </p>
               <p className="appointment-card__message">
                 {/* Display doctor's name from doctorData */}
-                <strong>Specialty:</strong> {doctorData?.speciality}
+                <strong>Specialty:</strong> {doctor?.speciality}
               </p>
               <p className="appointment-card__message">
-                <strong>Name:</strong> {appointmentData[0]?.name}
+                <strong>Name:</strong> {doctor.appointments[0]?.name}
               </p>
               <p className="appointment-card__message">
-                <strong>Date:</strong> {appointmentData[0]?.date}
+                <strong>Date:</strong> {doctor.appointments[0]?.date}
               </p>
               <p className="appointment-card__message">
-                <strong>Time Slot:</strong> {appointmentData[0]?.selectedSlot}
+                <strong>Time Slot:</strong> {doctor.appointments[0]?.selectedSlot}
               </p>
             </div>
-          </div>
-        </>
+          </div>)
+
+          })}
+        </div>
       )}
     </div>
   );
