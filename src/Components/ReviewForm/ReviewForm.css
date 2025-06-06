@@ -19,3 +19,17 @@ table, tr, td, th {
 .reviews-table button {
     margin: 0;
 }
+
+.reviews-table button:disabled {
+    background-color: darkgray;
+}
+
+.reviews-table button:disabled:hover {
+    cursor: not-allowed;
+}
+
+div[role="radiogroup"] {
+    display: flex;
+    gap: 8px; /* space between stars */
+    align-items: center;
+}

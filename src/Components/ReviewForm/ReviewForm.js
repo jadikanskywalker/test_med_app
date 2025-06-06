@@ -6,6 +6,7 @@ function ReviewForm() {
   const [reviewData, setReviewData] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [newReview, setNewReview] = useState("");
+  const [rating, setRating] = useState(0);
 
   useEffect(() => {
     const storedDoctorData = JSON.parse(localStorage.getItem('doctorData'));
@@ -30,9 +31,15 @@ function ReviewForm() {
   }, []);
 
   const hangleGiveReview = (name) => {
-    setNewReview(reviewData[name].review);
-    setShowForm(name);
+    if (reviewData[name].review == "") {
+      setShowForm(name);
+    }
   }
+
+  const handleRatingChange = (e) => {
+    const value = Number(e.target.value);
+    setRating(value);
+  };
 
   const giveReview = () => {
     if (newReview != "") {
@@ -41,15 +48,6 @@ function ReviewForm() {
       setReviewData(updatedReviewData);
       localStorage.setItem("reviewData", JSON.stringify(reviewData));
     }
-    setNewReview("");
-    setShowForm(false);
-  }
-
-  const deleteReview = () => {
-    let updatedReviewData = reviewData;
-    updatedReviewData[showForm]["review"] = "";
-    setReviewData(updatedReviewData);
-    localStorage.setItem("reviewData", JSON.stringify(reviewData));
     setNewReview("");
     setShowForm(false);
   }
@@ -74,7 +72,7 @@ function ReviewForm() {
             <tr>
               <td>{key}</td>
               <td>{value.speciality}</td>
-              <td><button onClick={() => hangleGiveReview(key)}>{value.review === "" ? "Give Review" : "Edit Review"}</button></td>
+              <td><button className="btn btn-primary" disabled={value.review != ""} onClick={() => hangleGiveReview(key)}>Give Review</button></td>
               <td>{value.review !== "" ? value.review : ""}</td>
             </tr>
             );
@@ -84,7 +82,7 @@ function ReviewForm() {
       ) : (
         <div className="review-grid">
           <div className="review-form">
-            <form onSubmit={giveReview} onReset={deleteReview}>
+            <form onSubmit={giveReview}>
               <div className="form-group">
                 <label>Doctor Name</label>
                 <input 
@@ -94,7 +92,17 @@ function ReviewForm() {
                 />
               </div>
               <div className="form-group">
-               <label htmlFor="review">Your review</label>
+               <label htmlFor="review">Name</label>
+               <input
+                 type="text"
+                 name="name"
+                 id="name"
+                 className="form-control"
+                 placeholder="Enter your name"
+               />
+             </div>
+              <div className="form-group">
+               <label htmlFor="review">Review</label>
                <input
                  value={newReview}
                  onChange={(e) => setNewReview(e.target.value)}
@@ -105,12 +113,32 @@ function ReviewForm() {
                  placeholder="Enter your review"
                />
              </div>
+             <div className="form-group">
+                <label htmlFor="rating">Rating</label>
+                <div role="radiogroup" aria-label="Star rating">
+                  {[...Array(5)].map((_, i) => {
+                    const starValue = i + 1;
+                    return (
+                      <label key={starValue} style={{ cursor: 'pointer', fontSize: '24px' }}>
+                        <input
+                          type="radio"
+                          name="rating"
+                          value={starValue}
+                          checked={rating === starValue}
+                          onChange={handleRatingChange}
+                          style={{ display: 'none' }}
+                        />
+                        <span style={{ color: starValue <= rating ? '#ffc107' : '#e4e5e9' }}>
+                          ★
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
               <div className="btn-group">
                 <button type="submit" className="btn btn-primary mb-2 mr-1 waves-effect waves-light">
                   Give Review
-                </button>
-                <button type="reset" className="btn btn-danger mb-2 mr-1 waves-effect waves-light">
-                  Delete Review
                 </button>
               </div>
             </form>
