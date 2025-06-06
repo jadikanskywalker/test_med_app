@@ -96,23 +96,23 @@ nav {
 } */
 
 /* Styling for the items in the dropdown menu */
-.dropdown-menu li {
+/* .dropdown-menu li {
     display: block;
     width: 150px;
     padding:5px;
-}
+} */
 
 /* Styling for links in the dropdown menu */
-.dropdown-menu li a {
+/* .dropdown-menu li a {
     color: #333;
     text-decoration: none;
-    transition: color 0.3s ease;
-}
+    transition: color 0.3s ease; 
+} */
 
 /* Hover effect for links in the dropdown menu */
-.dropdown-menu li a:hover {
+/* .dropdown-menu li a:hover {
     color: #2190ff;
-}
+} */
 
 /* Styling for the logo in the navbar */
 .nav__logo {

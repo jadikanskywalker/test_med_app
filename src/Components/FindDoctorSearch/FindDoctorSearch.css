@@ -116,7 +116,7 @@
 }
 .search-doctor-input-results {
     position: absolute;
-    top: 55%;
+    top: 50px;
     left: 0;
     width: 100%;
     z-index: 5;
