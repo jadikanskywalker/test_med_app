@@ -79,8 +79,8 @@
     margin-bottom: 20px;
     box-shadow: rgba(0, 0, 0,.1) 0 - 1px 0 0 inset;
     border-radius: 5px;
-    height: 100vh;
-    z-index: 2;
+    height: fit-content;
+    z-index: 5;
 }
 
 .doctor-search-box>img {
@@ -102,6 +102,7 @@
     border-top-right-radius:0;
     border-bottom-right-radius:0;
     border:1px solid rgb(59, 58, 58);
+
 }
 
 .findiconimg{
@@ -122,6 +123,7 @@
     height: 420px;
     margin-top: 2px;
     border: 1px solid #555;
+
 }
 
 .search-doctor-result-item {

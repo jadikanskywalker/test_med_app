@@ -73,9 +73,24 @@ const Navbar = () => {
         </li>
         {isLoggedIn?(
           <>
-            <li className="link">
-                Welcome, {username.split("@")[0]}
+            <li className="link dropdown">
+              <span onClick={handleDropdown} style={{cursor: "pointer"}}>
+                Welcome, {username.split("@")[0]} <i className="fa fa-caret-down"></i>
+              </span>
+              {showDropdown && (
+                <div className="dropdown-menu">
+                  <Link to="/profile" className="dropdown-item" onClick={() => setShowDropdown(false)}>
+                    Your profile
+                  </Link>
+                  <Link to="/reports" className="dropdown-item" onClick={() => setShowDropdown(false)}>
+                    Your reports
+                  </Link>
+                </div>
+              )}
             </li>
+            {/* <li className="link">
+                Welcome, {username.split("@")[0]}
+            </li> */}
             <li className="link">
               <button className="btn2" onClick={handleLogout}>
                 Logout
