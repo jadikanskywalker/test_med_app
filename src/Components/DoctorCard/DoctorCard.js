@@ -35,7 +35,7 @@ const DoctorCard = ({ name, speciality, experience, ratings, profilePic }) => {
     localStorage.setItem(name, JSON.stringify(updatedAppointments));
     const updatedDoctorData = doctorData.filter((doctor) => doctor.name !== name);
     setDoctorData(updatedDoctorData);
-    localStorage.setItem("doctorData", JSON.stringify());
+    localStorage.setItem("doctorData", JSON.stringify(updatedDoctorData));
     window.location.reload();
   };
 

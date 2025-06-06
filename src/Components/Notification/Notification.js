@@ -8,9 +8,8 @@ const Notification = ({ children }) => {
   // State variables to manage user authentication, username, doctor data, and appointment data
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
-  const [doctorData, setDoctorData] = useState(null);
-  const [appointmentData, setAppointmentData] = useState(null);
-  const [display, setDisplay] = useState(true);
+  const [doctorData, setDoctorData] = useState([]);
+  const [appointmentData, setAppointmentData] = useState([]);
 
   // useEffect hook to perform side effects in the component
   useEffect(() => {
@@ -19,16 +18,18 @@ const Notification = ({ children }) => {
     const storedDoctorData = JSON.parse(localStorage.getItem('doctorData'));
     const storedAppointmentData = [];
 
-    for (const doctor of storedDoctorData) {
-        const doctorAppointments = JSON.parse(localStorage.getItem(doctor.name));
-        if (doctorAppointments) {
-          storedAppointmentData.push({
-            name: doctor.name,
-            speciality: doctor.speciality,
-            appointments: doctorAppointments,
-          });
-        }
-      }
+    if (Array.isArray(storedDoctorData)) {
+        for (const doctor of storedDoctorData) {
+            const doctorAppointments = JSON.parse(localStorage.getItem(doctor.name));
+            if (doctorAppointments) {
+              storedAppointmentData.push({
+                name: doctor.name,
+                speciality: doctor.speciality,
+                appointments: doctorAppointments,
+              });
+            }
+       }
+    }
 
     // Set isLoggedIn state to true and update username if storedUsername exists
     if (storedUsername) {
@@ -42,7 +43,8 @@ const Notification = ({ children }) => {
     }
 
     // Set appointmentData state if storedAppointmentData exists
-      setAppointmentData(storedAppointmentData);
+    if (storedAppointmentData.length > 0)
+        setAppointmentData(storedAppointmentData);
     
   }, []); // Empty dependency array ensures useEffect runs only once after initial render
 
