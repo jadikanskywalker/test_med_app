@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import "./ReviewForm.css";
 
 function ReviewForm() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
   const [doctorData, setDoctorData] = useState([]);
   const [reviewData, setReviewData] = useState({});
-  // const [appointmentData, setAppointmentData] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [newReview, setNewReview] = useState("");
 
   useEffect(() => {
-    const storedUsername = sessionStorage.getItem('email');
     const storedDoctorData = JSON.parse(localStorage.getItem('doctorData'));
     let storedReviewData = JSON.parse(localStorage.getItem('reviewData'));
 
@@ -17,14 +15,8 @@ function ReviewForm() {
       storedReviewData = {};
     }
 
-    if (storedUsername) {
-      setIsLoggedIn(true);
-      setUsername(storedUsername);
-    }
-
     if (Array.isArray(storedDoctorData)) {
       for (const doctor of storedDoctorData) {
-        console.log(doctor);
         if (!(doctor.name in storedReviewData)) {
           storedReviewData[doctor.name] = {
             speciality: doctor.speciality,
@@ -32,16 +24,41 @@ function ReviewForm() {
           };
         }
       }
-      console.log(storedReviewData);
       setReviewData(storedReviewData);
       localStorage.setItem("reviewData", JSON.stringify(storedReviewData));
     }
   }, []);
 
+  const hangleGiveReview = (name) => {
+    setNewReview(reviewData[name].review);
+    setShowForm(name);
+  }
+
+  const giveReview = () => {
+    if (newReview != "") {
+      let updatedReviewData = reviewData;
+      updatedReviewData[showForm]["review"] = newReview;
+      setReviewData(updatedReviewData);
+      localStorage.setItem("reviewData", JSON.stringify(reviewData));
+    }
+    setNewReview("");
+    setShowForm(false);
+  }
+
+  const deleteReview = () => {
+    let updatedReviewData = reviewData;
+    updatedReviewData[showForm]["review"] = "";
+    setReviewData(updatedReviewData);
+    localStorage.setItem("reviewData", JSON.stringify(reviewData));
+    setNewReview("");
+    setShowForm(false);
+  }
+
   return (
     <div className="container reviews-container">
       <h1>Reviews</h1>
       {Object.keys(reviewData).length > 0 ? (
+      !showForm ? (
       <table className="reviews-table">
         <thead>
           <tr>
@@ -57,13 +74,49 @@ function ReviewForm() {
             <tr>
               <td>{key}</td>
               <td>{value.speciality}</td>
-              <td><button>{value.review === "" ? "Give Review" : ""}</button></td>
+              <td><button onClick={() => hangleGiveReview(key)}>{value.review === "" ? "Give Review" : "Edit Review"}</button></td>
               <td>{value.review !== "" ? value.review : ""}</td>
             </tr>
             );
           })}
         </tbody>
       </table>
+      ) : (
+        <div className="review-grid">
+          <div className="review-form">
+            <form onSubmit={giveReview} onReset={deleteReview}>
+              <div className="form-group">
+                <label>Doctor Name</label>
+                <input 
+                  className="form-control"
+                  value={showForm}
+                  disabled
+                />
+              </div>
+              <div className="form-group">
+               <label htmlFor="review">Your review</label>
+               <input
+                 value={newReview}
+                 onChange={(e) => setNewReview(e.target.value)}
+                 type="text"
+                 name="review"
+                 id="review"
+                 className="form-control"
+                 placeholder="Enter your review"
+               />
+             </div>
+              <div className="btn-group">
+                <button type="submit" className="btn btn-primary mb-2 mr-1 waves-effect waves-light">
+                  Give Review
+                </button>
+                <button type="reset" className="btn btn-danger mb-2 mr-1 waves-effect waves-light">
+                  Delete Review
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) 
       ) : (<p>No doctors to review.</p>)}
     </div>
   );
